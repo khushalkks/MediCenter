@@ -4,13 +4,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import "dotenv/config";
-
-const connectDB = async () => {
-    await mongoose.connect(process.env.MONGODB_URI, {
-        dbName: process.env.DB_NAME || "wellora",
-    });
-    console.log("✅ MongoDB Connected!");
-};
+import connectDB from "./config/mongodb.js";
 
 const doctorSchema = new mongoose.Schema({
     name: String,

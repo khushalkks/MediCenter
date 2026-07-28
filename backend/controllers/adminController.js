@@ -133,11 +133,57 @@ const adminDashboard = async (req, res) => {
         const users = await userModel.find({})
         const appointments = await appointmentModel.find({})
 
+        // Generate monthly trends for last 6 months
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthlyStatsMap = {};
+        
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date();
+            d.setMonth(d.getMonth() - i);
+            const monthName = months[d.getMonth()];
+            const year = d.getFullYear();
+            const key = `${monthName} ${year}`;
+            monthlyStatsMap[key] = { month: key, appointments: 0, revenue: 0 };
+        }
+
+        let completed = 0, cancelled = 0, pending = 0;
+        const specialityCounts = {};
+
+        appointments.forEach(app => {
+            const appDate = new Date(app.date);
+            const monthName = months[appDate.getMonth()];
+            const year = appDate.getFullYear();
+            const key = `${monthName} ${year}`;
+            if (monthlyStatsMap[key]) {
+                monthlyStatsMap[key].appointments += 1;
+                if (!app.cancelled) {
+                    monthlyStatsMap[key].revenue += app.amount;
+                }
+            }
+
+            if (app.cancelled) {
+                cancelled++;
+            } else if (app.isCompleted) {
+                completed++;
+            } else {
+                pending++;
+            }
+
+            const spec = app.docData?.speciality || "General physician";
+            specialityCounts[spec] = (specialityCounts[spec] || 0) + 1;
+        });
+
         const dashData = {
             doctors: doctors.length,
             appointments: appointments.length,
             patients: users.length,
-            latestAppointments: appointments.reverse()
+            latestAppointments: [...appointments].reverse(), // copy to prevent original array modification
+            appointmentsByMonth: Object.values(monthlyStatsMap),
+            specialityDistribution: Object.keys(specialityCounts).map(spec => ({
+                speciality: spec,
+                count: specialityCounts[spec]
+            })),
+            appointmentStatus: { completed, cancelled, pending }
         }
 
         res.json({ success: true, dashData })

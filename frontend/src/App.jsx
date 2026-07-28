@@ -14,6 +14,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Verify from './pages/Verify'
 import Chatbot from "./pages/Chatbot";
+import MedicalReports from "./pages/MedicalReports";
 
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
         <Route path='/my-appointments' element={<MyAppointments />} />
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/verify' element={<Verify />} />
+        <Route path='/medical-reports' element={<MedicalReports />} />
       </Routes>
       <Chatbot />
       <Footer />

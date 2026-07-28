@@ -34,15 +34,30 @@ const Chatbot = () => {
 
     const userMessageText = input.trim();
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const userMessage = { text: userMessageText, sender: "user", timestamp };
     
-    // Add user message
-    setMessages((prev) => [...prev, { text: userMessageText, sender: "user", timestamp }]);
+    // Add user message to local state
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
 
+    // Build history payload including the new message
+    const formattedHistory = messages.map(msg => ({
+      role: msg.sender === "user" ? "user" : "assistant",
+      content: msg.text
+    }));
+    
+    formattedHistory.push({
+      role: "user",
+      content: userMessageText
+    });
+
+    // Limit to last 10 messages for efficiency
+    const historyPayload = formattedHistory.slice(-10);
+
     try {
       const response = await axios.post(`${backendUrl || 'http://localhost:4000'}/api/chatbot`, {
-        message: userMessageText
+        messages: historyPayload
       });
 
       const botReply = response.data?.reply || "Sorry, I couldn't understand that.";

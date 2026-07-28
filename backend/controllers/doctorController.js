@@ -173,13 +173,49 @@ const doctorDashboard = async (req, res) => {
             }
         })
 
+        // Generate monthly trends for last 6 months
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthlyStatsMap = {};
+        
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date();
+            d.setMonth(d.getMonth() - i);
+            const monthName = months[d.getMonth()];
+            const year = d.getFullYear();
+            const key = `${monthName} ${year}`;
+            monthlyStatsMap[key] = { month: key, appointments: 0, earnings: 0 };
+        }
 
+        let completed = 0, cancelled = 0, pending = 0;
+
+        appointments.forEach(app => {
+            const appDate = new Date(app.date);
+            const monthName = months[appDate.getMonth()];
+            const year = appDate.getFullYear();
+            const key = `${monthName} ${year}`;
+            if (monthlyStatsMap[key]) {
+                monthlyStatsMap[key].appointments += 1;
+                if (app.isCompleted || app.payment) {
+                    monthlyStatsMap[key].earnings += app.amount;
+                }
+            }
+
+            if (app.cancelled) {
+                cancelled++;
+            } else if (app.isCompleted) {
+                completed++;
+            } else {
+                pending++;
+            }
+        });
 
         const dashData = {
             earnings,
             appointments: appointments.length,
             patients: patients.length,
-            latestAppointments: appointments.reverse()
+            latestAppointments: [...appointments].reverse(),
+            appointmentsByMonth: Object.values(monthlyStatsMap),
+            appointmentStatus: { completed, cancelled, pending }
         }
 
         res.json({ success: true, dashData })
