@@ -2,6 +2,16 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
+import { OpenAI } from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1",
+  defaultHeaders: {
+    "HTTP-Referer": "http://localhost:5173",
+    "X-Title": "MediCare Medical Assistant",
+  },
+});
 
 // API for doctor Login 
 const loginDoctor = async (req, res) => {
@@ -71,11 +81,48 @@ const appointmentCancel = async (req, res) => {
 const appointmentComplete = async (req, res) => {
     try {
 
-        const { docId, appointmentId } = req.body
+        const { docId, appointmentId, docNotes } = req.body
 
         const appointmentData = await appointmentModel.findById(appointmentId)
         if (appointmentData && appointmentData.docId === docId) {
-            await appointmentModel.findByIdAndUpdate(appointmentId, { isCompleted: true })
+            
+            let followUpRecommendation = null;
+
+            if (docNotes && docNotes.trim().length > 0) {
+                try {
+                    const prompt = `You are a clinical coordinator agent. Read the following doctor's diagnosis/prescription notes and determine if a follow-up appointment is recommended.
+Extract standard parameters in a clean JSON format.
+
+Notes: "${docNotes}"
+
+Return your response in a clean JSON format with these exact keys:
+{
+  "isActionable": true/false (true if doctor explicitly or implicitly advises a follow-up, check-up, review, or testing in the future),
+  "timeFrameDays": number (estimate the number of days for the follow-up. E.g. "next week" = 7, "2 weeks" = 14, "a month" = 30. If no timeframe mentioned, default to 14. Value must be a number),
+  "urgency": "Low" / "Medium" / "High",
+  "rationale": "One simple sentence explaining why the follow-up is needed (e.g. 'To monitor blood pressure levels')",
+  "recommendedSpeciality": "Name of specialty (e.g. General physician, Dermatologist, Cardiologist)"
+}`;
+
+                    const aiResponse = await openai.chat.completions.create({
+                        model: "openai/gpt-4o-mini",
+                        messages: [{ role: "user", content: prompt }],
+                        response_format: { type: "json_object" }
+                    });
+
+                    followUpRecommendation = JSON.parse(aiResponse.choices[0].message.content);
+                    console.log("🤖 AI Agent extracted follow-up recommendations:", followUpRecommendation);
+                } catch (aiError) {
+                    console.error("⚠️ AI Follow-up extraction failed:", aiError.message);
+                }
+            }
+
+            await appointmentModel.findByIdAndUpdate(appointmentId, { 
+                isCompleted: true,
+                docNotes: docNotes || "",
+                followUpRecommendation
+            });
+            
             return res.json({ success: true, message: 'Appointment Completed' })
         }
 

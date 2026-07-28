@@ -9,7 +9,7 @@ const openai = new OpenAI({
   baseURL: process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1",
   defaultHeaders: {
     "HTTP-Referer": "http://localhost:5173", // Your site URL
-    "X-Title": "Wellora Medical Chatbot",    // Your app name
+    "X-Title": "MediCare Medical Chatbot",    // Your app name
   },
 });
 
@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
     const systemPrompt = {
       role: "system",
       content:
-        "You are Wellora's helpful medical assistant. You help users understand symptoms, suggest which specialist to visit, answer general health questions, and guide users through booking appointments. Always recommend consulting a real doctor for serious concerns.",
+        "You are MediCare's helpful medical assistant. You help users understand symptoms, suggest which specialist to visit, answer general health questions, and guide users through booking appointments. Always recommend consulting a real doctor for serious concerns.",
     };
 
     let apiMessages = [systemPrompt];

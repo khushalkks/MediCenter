@@ -4,6 +4,7 @@ import { AppContext } from '../context/AppContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { assets } from '../assets/assets'
+import { ArrowRight } from 'lucide-react'
 
 const MyAppointments = () => {
 
@@ -139,6 +140,40 @@ const MyAppointments = () => {
                             <p className=''>{item.docData.address.line1}</p>
                             <p className=''>{item.docData.address.line2}</p>
                             <p className=' mt-1'><span className='text-sm text-[#3C3C3C] font-medium'>Date & Time:</span> {slotDateFormat(item.slotDate)} |  {item.slotTime}</p>
+                            
+                            {/* AI Clinical Notes & Follow-up Recommendations */}
+                            {item.isCompleted && (item.docNotes || item.followUpRecommendation) && (
+                                <div className='mt-4 p-4 bg-gray-50 border border-gray-150 rounded-xl flex flex-col gap-3 max-w-xl'>
+                                    {item.docNotes && (
+                                        <div>
+                                            <p className='text-xs font-bold text-gray-700 uppercase tracking-wider'>Doctor's Clinical Notes</p>
+                                            <p className='text-xs text-gray-500 mt-1 italic leading-relaxed'>"{item.docNotes}"</p>
+                                        </div>
+                                    )}
+                                    
+                                    {item.followUpRecommendation && item.followUpRecommendation.isActionable && (
+                                        <div className='pt-3 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[#5f6FFF]/5 p-3 rounded-lg border border-[#5f6FFF]/10'>
+                                            <div className='flex-1'>
+                                                <p className='text-[10px] font-bold text-primary uppercase tracking-wider'>
+                                                    AI Follow-up Suggestion
+                                                </p>
+                                                <p className='text-xs text-gray-700 font-semibold mt-0.5 leading-relaxed'>
+                                                    {item.followUpRecommendation.rationale}
+                                                </p>
+                                                <p className='text-[10px] text-gray-400 mt-1'>
+                                                    Urgency: <span className={`font-bold ${item.followUpRecommendation.urgency === 'High' ? 'text-red-500' : item.followUpRecommendation.urgency === 'Medium' ? 'text-amber-500' : 'text-green-500'}`}>{item.followUpRecommendation.urgency}</span> | Suggested Frame: {item.followUpRecommendation.timeFrameDays} days
+                                                </p>
+                                            </div>
+                                            <button 
+                                                onClick={() => navigate(`/appointment/${item.docId}`)}
+                                                className='shrink-0 bg-primary text-white text-xs px-3.5 py-2 rounded-lg font-semibold hover:opacity-90 transition-all flex items-center justify-center gap-1.5'
+                                            >
+                                                Book Follow-up <ArrowRight size={13} />
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                         <div></div>
                         <div className='flex flex-col gap-2 justify-end text-sm text-center'>

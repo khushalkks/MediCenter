@@ -15,7 +15,7 @@ const openai = new OpenAI({
   baseURL: process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1",
   defaultHeaders: {
     "HTTP-Referer": "http://localhost:5173",
-    "X-Title": "Wellora Medical Assistant",
+    "X-Title": "MediCare Medical Assistant",
   },
 });
 import doctorModel from "../models/doctorModel.js";
@@ -409,7 +409,7 @@ const summarizeReport = async (req, res) => {
             // RAG: Retrieve matching medical guidelines
             const { contextString } = await retrieveMedicalContext(textContent, openai);
 
-            const prompt = `You are Wellora's expert medical analyst. Analyze the following medical report text and provide a structured explanation in simple terms.
+            const prompt = `You are MediCare's expert medical analyst. Analyze the following medical report text and provide a structured explanation in simple terms.
 Highlight any values that are abnormal (e.g. out of reference ranges) or concerning, explain complex medical jargon, and state which doctor specialty the patient should consult.
 
 Cross-reference the findings with the retrieved verified clinical guidelines context below. For any parameters found in the report that match these guidelines, cite them in the 'clinical_references' array.
@@ -456,7 +456,7 @@ ${textContent}`;
                 openai
             );
 
-            const systemPrompt = `You are Wellora's expert medical analyst. Analyze the uploaded medical report image and provide a structured explanation in simple terms.
+            const systemPrompt = `You are MediCare's expert medical analyst. Analyze the uploaded medical report image and provide a structured explanation in simple terms.
 Highlight any values that are abnormal (e.g. out of reference ranges) or concerning, explain complex medical jargon, and state which doctor specialty the patient should consult.
 
 Cross-reference the findings with the verified official clinical guidelines below. For any parameters found in the image that match these guidelines, cite them in the 'clinical_references' array.

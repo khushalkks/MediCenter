@@ -7,7 +7,7 @@ import axios from "axios";
 const Chatbot = () => {
   const [messages, setMessages] = useState([
     {
-      text: "Hello! I am Wellora's Medical Assistant. How can I help you today? You can ask me about symptoms, general health, or get guidance on finding doctors and booking appointments.",
+      text: "Hello! I am MediCare's Medical Assistant. How can I help you today? You can ask me about symptoms, general health, or get guidance on finding doctors and booking appointments.",
       sender: "bot",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
@@ -121,7 +121,7 @@ const Chatbot = () => {
                   <FaRobot size={20} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-sm">Wellora Assistant</h3>
+                  <h3 className="font-semibold text-sm">MediCare Assistant</h3>
                   <p className="text-[11px] text-white/80">Online | Medical Chatbot</p>
                 </div>
               </div>

@@ -1,5 +1,4 @@
-import React from 'react'
-import { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { DoctorContext } from '../../context/DoctorContext'
 import { AppContext } from '../../context/AppContext'
 import { assets } from '../../assets/assets'
@@ -8,6 +7,9 @@ const DoctorAppointments = () => {
 
   const { dToken, appointments, getAppointments, cancelAppointment, completeAppointment } = useContext(DoctorContext)
   const { slotDateFormat, calculateAge, currency } = useContext(AppContext)
+
+  const [activeCompletionId, setActiveCompletionId] = useState(null)
+  const [docNotes, setDocNotes] = useState("")
 
   useEffect(() => {
     if (dToken) {
@@ -50,12 +52,53 @@ const DoctorAppointments = () => {
                 ? <p className='text-green-500 text-xs font-medium'>Completed</p>
                 : <div className='flex'>
                   <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
-                  <img onClick={() => completeAppointment(item._id)} className='w-10 cursor-pointer' src={assets.tick_icon} alt="" />
+                  <img onClick={() => setActiveCompletionId(item._id)} className='w-10 cursor-pointer' src={assets.tick_icon} alt="" />
                 </div>
             }
           </div>
         ))}
       </div>
+
+      {/* Clinical Notes Modal Overlay */}
+      {activeCompletionId && (
+        <div className='fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-sans'>
+          <div className='bg-white w-full max-w-md p-6 rounded-2xl border border-gray-100 shadow-xl flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200'>
+            <div>
+              <h3 className='text-lg font-bold text-gray-800'>Complete Appointment & Clinical Notes</h3>
+              <p className='text-xs text-gray-400 mt-1 leading-relaxed'>
+                Add diagnosis details or prescription guidelines below. Our AI Agent will analyze these notes to automatically recommend follow-up schedules.
+              </p>
+            </div>
+            <textarea 
+              value={docNotes}
+              onChange={(e) => setDocNotes(e.target.value)}
+              placeholder='e.g., Blood sugar checkup in 2 weeks. Monitor blood pressure daily.' 
+              className='w-full p-3 border border-gray-200 rounded-xl text-sm focus:outline-primary h-28 resize-none'
+            />
+            <div className='flex gap-3 justify-end text-sm font-semibold'>
+              <button 
+                onClick={() => {
+                  setActiveCompletionId(null);
+                  setDocNotes("");
+                }}
+                className='px-4 py-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition-all'
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={async () => {
+                  await completeAppointment(activeCompletionId, docNotes);
+                  setActiveCompletionId(null);
+                  setDocNotes("");
+                }}
+                className='px-4 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-all'
+              >
+                Confirm Completion
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )

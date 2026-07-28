@@ -13,15 +13,15 @@ const About = () => {
         <img className='w-full md:max-w-[360px]' src={assets.about_image} alt="" />
 
         <div className='flex flex-col justify-center gap-6 md:w-2/4 text-sm text-gray-600'>
-        <p>Welcome to Wellora — Your Smart Healthcare Ecosystem</p>
+        <p>Welcome to MediCare — Your Smart Healthcare Ecosystem</p>
 
-          <p>At Wellora, we revolutionize healthcare management by offering a seamless, tech-driven solution that prioritizes accessibility, efficiency, and personalized care. We recognize the complexities of scheduling appointments and maintaining health records, and our platform simplifies the entire journey.</p>
+          <p>At MediCare, we revolutionize healthcare management by offering a seamless, tech-driven solution that prioritizes accessibility, efficiency, and personalized care. We recognize the complexities of scheduling appointments and maintaining health records, and our platform simplifies the entire journey.</p>
 
           <p>
-          With an unwavering commitment to healthcare innovation, Wellora leverages advanced technologies, including AI-powered scheduling and secure digital health records, to enhance your experience and deliver top-tier service. Whether you're booking your first virtual consultation or managing ongoing treatments, Wellora is your reliable partner at every stage of your healthcare journey.
+          With an unwavering commitment to healthcare innovation, MediCare leverages advanced technologies, including AI-powered scheduling and secure digital health records, to enhance your experience and deliver top-tier service. Whether you're booking your first virtual consultation or managing ongoing treatments, MediCare is your reliable partner at every stage of your healthcare journey.
           </p>
           <b className='text-gray-800'>Our Vision</b>
-          <p>Our vision at Wellora is to create a seamless healthcare experience for every user. We aim to bridge the gap  between patients and healthcare providers, making it easier for you to access the care you need, when you need it.</p>
+          <p>Our vision at MediCare is to create a seamless healthcare experience for every user. We aim to bridge the gap  between patients and healthcare providers, making it easier for you to access the care you need, when you need it.</p>
         </div>
       </div>
 
