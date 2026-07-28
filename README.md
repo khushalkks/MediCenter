@@ -12,12 +12,13 @@ MediCenter is a modern, full-stack healthcare platform designed to streamline do
 - **Comprehensive Profile Management**: Edit personal details, upload profile pictures (Cloudinary), and track appointment statuses.
 - **Secure Payment Integration**: Seamlessly pay booking fees using **Stripe** or **Razorpay** checkout.
 - **AI Medical Assistant**: Interactive chatbot that answers health queries, suggests specialties based on symptoms, and guides users on bookings.
+- **AI Medical Report Summarizer (Vector RAG)**: Upload clinical report documents (PDFs or images) and get layout-aware structured explanations in plain English. Integrates a local **Retrieval-Augmented Generation (RAG)** pipeline to compute Cosine Similarity search over OpenAI Embeddings, returning verified NIH MedlinePlus/PubMed citations and links.
 
 ### 💼 Admin & Doctor Dashboard
-- **Analytics Overview**: View metrics (total doctors, bookings, patients, and revenue) in a responsive visual interface.
+- **Rich Analytics Dashboards (Recharts)**: View responsive visual charts (Area, Donut Pie, and Bar charts) visualizing appointments, total revenue, doctor specialty distribution, and booking completion rates.
+- **Doctor Specific Portal**: Individual doctor logins to manage bookings, track monthly earnings trends, and update personal availability with custom charts.
 - **Doctor Management**: Easily add doctors with credentials, qualifications, specialities, fees, addresses, and bios. Toggle availability status.
 - **Appointment Management**: View all appointments, mark appointments as completed, or process cancellations.
-- **Doctor Specific Portal**: Individual doctor logins to manage bookings, track earnings, and update personal availability.
 
 ---
 
@@ -25,12 +26,12 @@ MediCenter is a modern, full-stack healthcare platform designed to streamline do
 
 | Layer | Technologies |
 |---|---|
-| **Frontend** | React (Vite), Tailwind CSS, Framer Motion, React Icons, Axios, React Router v6, React Toastify |
-| **Backend** | Node.js, Express.js, JWT, bcrypt (Security), Multer (File Uploads) |
+| **Frontend** | React (Vite), Tailwind CSS, **Recharts (Data Visualization)**, Framer Motion, React Icons, Axios, React Router v6, React Toastify |
+| **Backend** | Node.js, Express.js, JWT, bcrypt (Security), **Multer** (File Uploads), **pdf-parse** (PDF Text Extraction) |
 | **Database** | MongoDB + Mongoose |
 | **Cloud Storage** | Cloudinary (Doctor/User Profile Pictures) |
 | **Payments** | Stripe & Razorpay |
-| **AI Chatbot** | OpenAI SDK + OpenRouter |
+| **AI Integrations** | OpenAI SDK, OpenRouter (`gpt-4o-mini`), **Vector RAG (In-memory Cosine Similarity over OpenAI Embeddings)** |
 
 ---
 
