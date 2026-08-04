@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { wrapModel } from "./modelWrapper.js";
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -12,4 +13,4 @@ const userSchema = new mongoose.Schema({
 })
 
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);
-export default userModel;
+export default wrapModel("user", userModel);

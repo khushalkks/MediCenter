@@ -27,7 +27,8 @@ const connectDB = async () => {
             console.log("2. Or start a local MongoDB service: run `docker compose up -d` or start your local MongoDB service.");
             console.log("3. Or set a custom MONGODB_URI in your backend/.env file.\n");
             
-            process.exit(1); // Exit process if all DB connections fail
+            console.warn("⚠️ Both database connections failed. Switching to Local file-based mock database (mockDb.json) fallback for offline execution!");
+            global.useMockDb = true;
         }
     }
 };

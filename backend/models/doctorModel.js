@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import { wrapModel } from "./modelWrapper.js";
+
 const doctorSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -17,4 +19,4 @@ const doctorSchema = new mongoose.Schema({
 }, { minimize: false })
 
 const doctorModel = mongoose.models.doctor || mongoose.model("doctor", doctorSchema);
-export default doctorModel;
+export default wrapModel("doctor", doctorModel);

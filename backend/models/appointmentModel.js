@@ -1,5 +1,7 @@
 import mongoose from "mongoose"
 
+import { wrapModel } from "./modelWrapper.js"
+
 const appointmentSchema = new mongoose.Schema({
     userId: { type: String, required: true },
     docId: { type: String, required: true },
@@ -17,4 +19,4 @@ const appointmentSchema = new mongoose.Schema({
 })
 
 const appointmentModel = mongoose.models.appointment || mongoose.model("appointment", appointmentSchema)
-export default appointmentModel
+export default wrapModel("appointment", appointmentModel)
